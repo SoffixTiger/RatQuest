@@ -1,0 +1,17 @@
+#ratbuxxProgressBar {
+  height: 20px;
+  background-color: green;
+}
+
+#loadingBar {
+  border-style: solid;
+  width: 50%;
+  height: 20px;
+  background-color: grey;
+  text-align: center;
+  line-height: 20px;
+}
+
+#area1 {
+  display: block;
+}
