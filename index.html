@@ -6,37 +6,125 @@
 	<link href='http://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' rel='stylesheet' type='text/css'>
 	<link rel="canonical" href="" />
 	<meta name="description" content="RatQuest - By Soffix of VH.mucktopia.com" />
+	<!-- Thanks to Eidolon for the help! -->
 
-	<script>
-      (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-      (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-      m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-      })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-    
-      ga('create', 'UA-88096527-1', 'auto');
-      ga('send', 'pageview');
-    
-    </script>
 	</head>
-	<body onload="updateLog(0)" style= "font-family: trebuchet ms, sans-serif";>
 	<script type="text/javascript" src="main.js"></script>
 	
-	<textarea readonly disabled style= "background-color:white" id="logText" name="logText" rows="12" cols="120"></textarea>
-	<button id="mapButton" onclick="openMap()">Map</button> <div id="map" name="areaMap" color="black" width="10px" height="10px" display="none"></div>
+	<span id="vhText">Currently available content includes up to finding the cool T-shirt.</span><br><br><br>
 
-	<br><br>
-	
-	<button id="area1button1" name="ratbuxxButton" onclick="ratbuxxClick(number)">Gotta earn that paper</button><br>
-	<p>RatBuxx™: <span style="color:green" id="ratbuxxDisplay">48.00</span></p>
-	
-	<button id="area1button2" name="printerButton" onclick="buyPrinter()">Purchase a perfectly legal money printer</button><br>
-	<p>Very Illegal Money Printers: <span style="color:darkgray" id="printerDisplay">OFFLINE</span></p>
-	<p>Price: <span style="font-size: 12px" "color:green" id="printerCost">10</span>
+	<div id="gameInterface">
+		<div id="hudMenu" class="universal">
+			<div id="menuButtons1" class="universal">
+				<div id="mapCover">		<div class="navButton universalContainer" id="mapButton" title="Here is the map. Where do you wish to go?" onclick="openMap()">Map</div></div>
+				<div id="relicsCover">	<div class="navButton universalContainer" id="relicsButton" title="Your collection of powerful relics." onclick="openRelics()">Relics</div></div>
+				<div id="nullCover">	<div class="navButton universalContainer" id="unusedButton2" onclick="updateLog(4)">???</div></div></div>
+			<div id="menuButtons2" class="universal">
+				<div id="nullCover">	<div class="navButton universalContainer" id="unusedButton3" onclick="updateLog(5)">???</div></div>
+				<div id="nullCover">	<div class="navButton universalContainer" id="unusedButton4" onclick="updateLog(5)">???</div></div>
+				<div id="nullCover">	<div class="navButton universalContainer" id="unusedButton5" onclick="updateLog(5)">???</div></div></div>
+			<div id="statsContainer1" class="universal">
+				<div class="individualStatsContainer" id="bodyContainer"><div class="statButton" id="bodyHeader" title="Your physical condition.&#10;Each level of Body increases your max Stamina by &#120817; and rate of recovery proportionately.&#10;Each level of Body requires 2x the experience of the previous.">Body<br><span class="statText" id="bodyLevelText">Lvl 1</span><br>
+					<div class="universal universalBar" id="bodyExpBar"><div class="universal progressBar" id="bodyExpProgressBar"></div></div></div></div>
+				<div class="individualStatsContainer"><div class="statButton" id="mindHeader" title="Your mental condition.&#10;Some actions require a certain level of mind to unlock.&#10;Each level of Mind requires 2x the experience of the previous.">Mind<br><span class="statText" id="mindLevelText">Lvl 1</span><br>
+					<div class="universal universalBar" id="mindExpBar"><div class="universal progressBar" id="mindExpProgressBar"></div></div></div></div>
+				<div class="individualStatsContainer"><div class="statButton" id="StaminaHeader" title="The energy you have to perform tasks. When it is depleted, you will need to rest.">Stamina<br>
+					<div class="universal universalBar" id="staminaBar"><div class="universal progressBar" id="staminaProgressBar"></div></div></div></div></div>
+			<div id="statsContainer2" class="universal">
+				<div class="individualStatsContainer"><div class="statButton" id="ratbuxxHeader" title="The currency of The Federal Democratic Republic of Rodent Brethren.&#10;Colloquially they are referred to as RatBuxx.">RatBuxx™<br>
+				<span class="universal moneySymbol" id="moneySymbolHeader" style="color: green; font-size: 16px; font-weight: bold; text-shadow: 0 0 3px #000000, 0 0 5px #000000;">RB</span><span class="universal" id="ratbuxxDisplay" >12.00</span></div></div>
+				<div class="individualStatsContainer"><span class="statButton" id="statsButton4">Satiety</span></div>
+				<div class="individualStatsContainer"><span class="statButton" id="statsButton5">Motivation</span></div></div>
+			<div id="statsContainer3" class="universal">
+				<p class="universal" id="locationBox"><span class="universal" id="locationHeader">CURRENTLY IN: </span><br><span class="universal" id="locationVariable">Your Apartment</span></p></div>
+			<div id="inventoryContainer" class="universal"><span class="inventory">Inventory</span><br><span id="plasticInventory"></span><span id="paperInventory"></span><span id="metalInventory"></span></div></div>
+		<p class="universal" id="objectsBox"><span class="universal" id="objectsHeader">Items of interest</span><span class="universal" id="peopleHeader">People of interest</span></p>
 
-	<button id="area1button3" name="logButton1" onclick="updateLog(1)">Click this to send dialogue to the text box</button>
-	<button id="area1button4" name="logButton2" onclick="updateLog(2)">Click this to send other dialogue to the text box</button>
+		<div id="mapPage"><div class="mapTile" id="tile1"></div><div class="mapTile" id="tile2"></div><div class="mapTile" id="tile3"></div><div class="mapTile" id="tile4"></div><div class="mapTile" id="tile5"></div>
+		<div class="mapTile" id="tile6"></div><div class="mapTile" id="tile7"></div><div class="mapTile" id="tile8"></div><div class="mapTile" id="tile9"></div><div class="mapTile" id="tile10"></div>
+		<div class="mapTile" id="tile11"></div><div class="mapTile" id="tile12"></div><div class="mapTile" id="tile13"></div><div id="tile14" class="navTile" onclick="goNorth()">Go N</div><div class="mapTile" id="tile15"></div>
+		<div class="mapTile" id="tile16"></div><div class="mapTile" id="tile17"></div><div class="mapTile" id="tile18"></div><div class="mapTile" id="tile19"></div><div class="mapTile" id="tile20"></div>
+		<div class="mapTile" id="tile21"></div><div class="navTile" id="tile22" onclick="goWest()">Go W</div><div class="mapTile" id="tile23" onclick="examineSelf()">You</div><div id="tile24" class="navTile" onclick="goEast()">Go E</div><div class="mapTile" id="tile25"></div>
+		<div class="mapTile" id="tile26"></div><div class="mapTile" id="tile27"></div><div class="mapTile" id="tile28"></div><div class="mapTile" id="tile29"></div><div class="mapTile" id="tile30"></div>
+		<div class="mapTile" id="tile31"></div><div id="tile32" class="navTile" onclick="goSouth()">Go S</div><div class="mapTile" id="tile33"></div><div class="mapTile" id="tile34"></div><div class="mapTile" id="tile35"></div>
+		<div class="mapTile" id="tile36"></div><div class="mapTile" id="tile37"></div><div class="mapTile" id="tile38"></div><div class="mapTile" id="tile39"></div><div class="mapTile" id="tile40"></div>
+		<div class="mapTile" id="tile41"></div><div class="mapTile" id="tile42"></div><div class="mapTile" id="tile43"></div><div class="mapTile" id="tile44"></div><div class="mapTile" id="tile45"></div></div>
+<!-- Map Page and Relics Page are self-contained -->
 	
-	<div id="loadingBar" name="loadingBar">
-	<div id="ratbuxxProgressBar" name="ratbuxxProgressBar"></div></div>
+		<div id="relicsPage"><div class="relicsPageItem" id="rPI1" onclick="rPI1Click()">???</div><div class="relicsPageItem" id="rPI2">???</div><div class="relicsPageItem" id="rPI3">(TBD)</div><div class="relicsPageItem" id="rPI4">(TBD)</div><div class="relicsPageItem" id="rPI5">(TBD)</div>
+			<div class="relicsPageItem" id="rPI6">(TBD)</div><div class="relicsPageItem" id="rPI7">(TBD)</div><div class="relicsPageItem" id="rPI8">(TBD)</div><div class="relicsPageItem" id="rPI9">(TBD)</div><div class="relicsPageItem" id="rPI10">(TBD)</div>
+			<div class="relicsPageItem" id="rPI11">(TBD)</div><div class="relicsPageItem" id="rPI12">(TBD)</div><div class="relicsPageItem" id="rPI13">(TBD)</div><div class="relicsPageItem" id="rPI14">(TBD)</div><div class="relicsPageItem" id="rPI15">(TBD)</div>
+			<div class="relicsPageItem" id="rPI16">(TBD)</div><div class="relicsPageItem" id="rPI17">(TBD)</div><div class="relicsPageItem" id="rPI18">(TBD)</div><div class="relicsPageItem" id="rPI19">(TBD)</div><div class="relicsPageItem" id="rPI20">(TBD)</div>
+			<div class="relicsPageItem" id="rPI21">(TBD)</div><div class="relicsPageItem" id="rPI22">(TBD)</div><div class="relicsPageItem" id="rPI23">(TBD)</div><div class="relicsPageItem" id="rPI24">(TBD)</div><div class="relicsPageItem" id="rPI25">(TBD)</div></div>
 
-	</body>
+		<div id="area0Container"> <!-- These exist "behind" the z-index, to create null containers that seem to "replace" completed progress items. -->
+		<div id="nullContainer1" class="nullContainer position1"></div>
+		<div id="nullContainer2" class="nullContainer position2"></div>
+		<div id="nullContainer3" class="nullContainer position3"></div>
+		<div id="nullContainer4" class="nullContainer position4"></div>
+		<div id="nullContainer5" class="nullContainer position5"></div>
+		<div id="nullContainer6" class="nullContainer position6"></div>
+		<div id="nullContainer7" class="nullContainer position7"></div>
+		<div id="nullContainer8" class="nullContainer position8"></div>
+		<div id="nullContainer9" class="nullContainer position9"></div>
+		<div id="nullContainer10" class="nullContainer position10"></div></div>
+		<!-- area1 start -->
+		<div id="area1Container">
+		<div class="area1 progressContainer position1" id="searchCouchContainer">
+			<span class="area1 actionText" id="couchHeader">Couch
+				<span class="area1 progressText " title="(Progress) items will provide a bonus, but have limited use. Fret not, as they will provide far more beneficial rewards upon exhaustion.">(Progress)</span></span>
+			<div class="area1 thinButton  area1Button actionButton" id="couchSearchButton" onclick="couchSearchClick()">Search</div>
+			<span class="area1 progressText" id="couchSearchCompletionProgress">0% Complete</span>
+			<div class="area1 loadingBar " id="couchSearchBar"><div class="area1 thinButton  progressBar" id="couchSearchProgressBar"></div></div>
+			<div class="area1 captionText ">Rewards: +RB, +Body</div><div class="area1  examineEye" id="couchEye" onClick="updateLog(dialogue[11])">&#128065;</div></div>
+		
+		<div class="area1  shopContainer position2" id="shopSpencer"><span class="area1 actionText" id="shopTestButton" onClick="">SHOP (TBD)<span class="area1 progressText" title="(Shop) items will exchange items for RatBuxx or materials.">(Shop)</span></span><div class="area1 thinButton area1Button" id="shopTestButton">Talk</div>
+		<div class="area1 thinButton" id="shopItem1" onclick=""></div><div class="area1 thinButton" id="shopItem2" onclick=""></div><div class="area1 thinButton" id="shopItem3" onclick=""></div><div class="area1 thinButton" id="shopItem4" onclick=""></div>
+		<div class="area1 examineEye" id="shopTestEye" onclick="">&#128065;</div></div>
+
+		<div class="area1  actionContainer position3" id="actionCouchContainer"><span class="area1 actionText" id="couch">Couch<span class="area1 progressText" title="(Actions) items are generally unlimited use and provide a specific function.">(Actions)</span></span>
+		<div class="area1 thinButton area1Button actionButton" id="restButton" onclick="restingCouchClick()">Rest</div><span class="area1 actionText">Stamina recovery x15.</span><span class="area1 actionText">Cannot be used along with other actions.</span>
+		<span class="area1 examineEye">∞</span><div class="area1 examineEye" id="couchEye" onClick="updateLog(dialogue[12])">&#128065;</div></div>
+	
+		<div class="area1  npcContainer position4" id="npcSpencer"><span class="area1 actionText" id="npcTestButton" onClick="">NPC<span class="area1 progressText" title="(NPC) items will talk to you, give quests, etc.">(NPC)</span></span><div class="area1 thinButton area1Button" id="npcTestButton">Talk</div>
+		<div class="area1 thinButton" id="npcItem1" onclick=""></div><div class="area1 thinButton" id="npcItem2" onclick=""></div><div class="area1 thinButton" id="npcItem3" onclick=""></div><div class="area1 thinButton" id="npcItem4" onclick=""></div>
+		<div class="area1 examineEye" id="npcTestEye" onclick="">&#128065;</div></div>
+		<!-- Format: Name of object, type of action, button with verb, % completion, bar, rewards, eye-->
+		<div class="area1 progressContainer position5" id="floorTrashContainer"><span class="area1  actionText" id="floorTrashHeader">Trash
+		<span class="area1 progressText" title="(Progress) items will provide a bonus, but have limited use. Fret not, as they will provide far more beneficial rewards upon exhaustion.">(Progress)</span></span>
+		<div class="area1 thinButton  area1Button actionButton" id="floorTrashButton" onclick="floorTrashClick()">Clean</div>
+		<div class="area1 progressText" id="floorTrashCompletionProgress">0% Complete</div><div class="area1 loadingBar " id="floorTrashBar">
+		<div class="area1 thinButton  progressBar" id="floorTrashProgressBar" ></div></div>
+		<div class="area1 captionText ">Rewards: +Mind, +Materials</div><div class="area1  examineEye" id="floorTrashEye" onClick="updateLog(dialogue[13])">&#128065;</div></div>
+
+		<div class="relicContainer position9" id="tshirtRelicContainer"><span class=" actionText">Hidden beneath the ample garbage is a trendy, if outdated band tee. You realize you are shirtless.</span><span class="takeRelic" id="tshirtRelicButton" onclick="tshirtRelicClick()">TAKE RELIC</span></div>
+		</div><!-- area1 end-->
+	
+		<!-- area 2 start -->
+		<div id="area2Container">
+			<div class="area2 position1 actionContainer" id="trashHeapContainer"><span class="area2 actionText" id="trashHeap">Trash Heap<span class="area2 progressText" title="(Actions) items are generally unlimited use and provide a specific function.">(Actions)</span></span>
+				<div class="area2 thinButton area2Button actionButton" id="trashHeapButton" onclick="trashHeapClick()">Search</div>
+				<div class="area2 loadingBar" id="trashHeapBar"><div class="area2 thinButton progressBar" id="trashHeapProgressBar"></div></div>
+				<span class="area2 captionText">Search through the infinite heap of trash.</span><span class="area2 captionText" onclick="viewTrashHeapLog()">Click to view drop table.</span>
+				<div class="area2 examineEye" id="trashHeapEye" onClick="updateLog(dialogue[99])">&#128065;</div></div>
+		<!-- Action item, they do not finish --> 
+			<div class="area2 position3 actionContainer" id="scavengeChangeContainer"><span class="area2 actionText" id="scavengeChangeContainer"><span class="area2 progressText" title="(Actions) items are generally unlimited use and provide a specific function.">(Actions)</span></span>
+				<div class="area2 thinButton area2Button actionButton" id="scavengeChangeContainer" onclick="scavengeChangeClick()">Search</div>
+				<div class="area2 loadingBar" id="scavengeChangeBar"><div class="area2 thinButton progressBar" id="scavengeChangeProgressBar"></div></div>
+				<span class="area2 captionText">Search under the infinite number of vending machines and benches.</span><span class="area2 captionText" onclick="viewScavengeChangeLog()">Click to view drop table.</span>
+				<div class="area2 examineEye" id="scavengeChangeEye" onClick="updateLog(dialogue[99])">&#128065;</div></div>
+
+			<div class="area2 position2 npcContainer" id="talkLocalsContainer">
+				<span class="area2 actionText" id="talkLocalsHeader">Locals<span class="area2 progressText" title="(NPC) items will talk to you, give quests, etc.">(Progress)</span></span>
+				<div class="area2 thinButton area2Button actionButton" id="talkLocalsButton" onclick="talkLocalsClick()">Talk</div>
+				<span class="area2 talkLocals progressText" id="talkLocalsCompletionProgress">0% Complete</span>
+				<div class="area2 loadingBar" id="talkLocalsBar"><div class="area2 thinButton progressBar" id="talkLocalsProgressBar"></div></div>
+				<span class="area2 captionText">Talk to the locals about the current situation.</span>
+				<div class="area2 examineEye" id="talkLocalsEye" onClick="updateLog(dialogue[99])">&#128065;</div></div>
+		</div>
+		<div id="logText"><br></div><div id="buffer"></div>
+
+	</div>
+</body>
+
+<!-- Can a drop table view be implemented in a better way? -->

@@ -1,17 +1,645 @@
-#ratbuxxProgressBar {
+body {
+	background-color: #363737;
+	color: #3B3C36;
+	font-family: trebuchet ms, sans-serif;
+}
+
+* {
+	margin: 0;
+}
+
+#gameInterface {
+	display: block;
+	position: static;
+	border-style: solid;
+	border-width: 10px;
+	border-color: silver;
+	align-self: center;
+	width: 1004px;
+	height: 1200px;
+	z-index: 0;
+}
+
+#area1Container {
+	display: grid;
+	position: sticky;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #363737;
+	grid-template-columns: 502px 502px;
+	grid-template-rows: 102px 102px 102px 102px 102px;
+	width: 1000px;
+	height: 500px;
+	z-index: 2;
+}
+
+#area2Container {
+	display: none;
+	position: sticky;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #363737;
+	grid-template-columns: 502px 502px;
+	grid-template-rows: 102px 102px 102px 102px 102px;
+	width: 1000px;
+	height: 500px;
+	z-index: 2;
+}
+
+/*#area1Container > *  {
+	z-index: 3;
+}*/
+
+.statButton { /* Generic button for trackable stats in top-left, the blue ones. */
+	width: 200px;
+	height: 50px;
+	user-select: none;
+	border-style: solid;
+	border-width: 1px;
+	border-color: #3B3C36;
+	font-size: 12px;
+	text-align: center;
+	background-color: #779ECB;
+	display: inline-block;
+	position: relative;
+	vertical-align: top;
+	align-items: left;
+	line-height: 100%;
+}
+
+.navButton { /* Generic button for universal navigation items in top-left. */ 
+	user-select: none;
+	border-style: solid;
+	border-color: #3B3C36;
+	border-width: 1px;
+	font-size: 16px;
+	text-align: center;
+	width: 100px;
+	height: 100px;
+	display: block;
+	position: static;
+	align-items: center;
+	line-height: 200%;
+}
+
+.thinButton { /* Thin orange buttons used to activate progress/actions verbs. */
+	user-select: none;
+	border-style: solid;
+	border-color: #3B3C36;
+	border-width: 2px;
+	font-size: 12px;
+	text-align: center;
+	width: 80%;
+	height: 50%;
+	background-color: orange;
+	color: black;
+	display: inline-block;
+	position: static;
+	margin: auto;
+	line-height: 230%;
+}
+
+.textInButton {
+	font-size: 12px;
+	position: static;
+	margin: auto;
+	color: black;
+}
+
+.progressContainer { /* Default container for a progress item. 6 columns for name w/identifier, button w/verb, % until completion, repeatable task loading/progress bar(s), reward, and .examineEye. */
+	grid-template-columns: 15% 20% 20% 25% 10% 10%;
+	width: 500px;
+	height: 100px;
+	border-style: solid;
+	border-width: 1px;
+	position: sticky;
+	display: grid;
+	background-color: #BB3F3F;
+	border: black;
+}
+
+.actionContainer { /* Generic container for an action item. 4 columns for name w/identifier, button w/verb, description of the action's benefit, and .examineEye. */
+	grid-template-columns: 15% 15% 20% 20% 15% 10%;
+	width: 500px;
+	height: 100px;
+	border: black;
+	border-style: solid;
+	border-width: 1px;
+	position: sticky;
+	display: grid;
+	background-color: #956a4e;
+	margin: auto;
+	text-align: center;
+}
+
+.npcContainer { /* Generic container for an NPC item. ? columns for name, ?, ?, ?, ?, and .examineEye. */ 
+	grid-template-columns: 15% 20% 20% 25% 10% 10%;
+	width: 500px;
+	height: 100px;
+	border-style: solid;
+	border-width: 1px;
+	position: sticky;
+	display: grid;
+	background-color: #2dce28;
+	border: black;
+}
+
+.shopContainer { /* Generic container for an NPC shop. 9 columns for name, Talk button, up to 4 individual shop items, and .examineEye. */
+	grid-template-columns: 14% 15% 15% 15% 15% 15% 11%;
+	position: sticky;
+	border-style: solid;
+	border-width: 2px;
+	width: 500px;
+	height: 100px;
+	margin: auto;
+	background-color: green;
+	display: grid;
+}
+
+.relicContainer { /* Container for a relic pickup, one click and the pickup is taken and the bar disappears. 2 columns for Take button and brief description. Display: none until a condition makes it visible. */
+	grid-template-columns: 70% 30%;
+	grid-column: 1;
+	position: sticky;
+	border-width: 1px;
+	width: 1000px;
+	height: 100px;
+	border-style: solid;
+	background: linear-gradient(90deg, rgba(255, 0, 0, 1) 0%,rgba(255, 154, 0, 1) 10%, rgba(208, 222, 33, 1) 20%, rgba(79, 220, 74, 1) 30%, rgba(63, 218, 216, 1) 40%, rgba(47, 201, 226, 1) 50%, rgba(28, 127, 238, 1) 60%, rgba(95, 21, 242, 1) 70%,  rgba(186, 12, 248, 1) 80%,  rgba(251, 7, 217, 1) 90%, rgba(255, 0, 0, 1) 100%);
+	display: none;
+	margin: auto;
+	z-index: 4;
+}
+
+#area0Container {
+	grid-template-columns: 50% 50%;
+	grid-template-rows: 20% 20% 20% 20% 20%;
+	position: absolute;
+	display: grid;
+	z-index: 2;
+}
+
+.nullContainer { /* Container to occupy space, intended to be nonfunctional. This forces the layout always to include a column of 5 "items of interest" and a column of 5 (6?) "People of interest". */
+	position: sticky;
+	display: inline-block;
+	border-width: 1px;
+	width: 500px;
+	height: 100px;
+	border-style: solid;
+	background: black;
+	margin: auto;
+	z-index: 2;
+}
+.position1 {
+	grid-column: 1;
+	grid-row: 1;
+}
+.position2 {
+	grid-column: 2;
+	grid-row: 1;
+}
+.position3 {
+	grid-column: 1;
+	grid-row: 2;
+}
+.position4 {
+	grid-column: 2;
+	grid-row: 2;
+}
+.position5 {
+	grid-column: 1;
+	grid-row: 3;
+}
+.position6 {
+	grid-column: 2;
+	grid-row: 3;
+}
+.position7 {
+	grid-column: 1;
+	grid-row: 4;
+}
+.position8 {
+	grid-column: 2;
+	grid-row: 4;
+}
+.position9 {
+	grid-column: 1;
+	grid-row: 5;
+}
+.position10 {
+	grid-column: 2;
+	grid-row: 5;
+}
+
+#vhText {
+	color: yellow;
+}
+
+.examineEye { /* The eye icon that can be clicked for additional information. Last item in any progress/action container. */
+	user-select: none;
+	width: 50px;
+	height: 50px;
+	font-size: 50px;
+	text-align: center;
+	color: black;
+	display: inline-block;
+	position: relative;
+	margin: auto;
+	bottom: 10px;
+}
+
+#inventoryContainer {
+	width: 1000px;
+	height: 100px;
+	display: block;
+	position: sticky;
+	border-style: solid;
+	border-width: 1px;
+	font-size: 16px;
+	text-align: center;
+	background-color: silver;
+}
+
+#logText { /* The large universal text log that is top-center. All text feeds to here. */
+	font-family: Georgia, serif; 
+	opacity: 100%;
+/*	font-family: Tahoma, sans-serif; */
+	transition-property: color, opacity; 
+	transition-duration: 0.2s, 0.2s;
+	overflow: hidden;
+	font-size: 20px;
+	border-style: solid;
+	border-width: 2px 2px 0 2px;
+	width: 1000px;
+	height: 360px;
+	position: sticky;
+	display: block;
+	background-color: #222222; 
+	color: 	#636363;
+	text-align: center;
+}
+
+#buffer {
+	width: 1000px;
+	height: 20px;
+	border-width: 0 2px 4px 2px;
+	border-style: solid;
+	background-color: #222222; 
+	border-color: 	#636363;
+}
+
+.relicText {
+	color: #d5b85A;
+	text-shadow: #FFD700 1px -5px 10px;
+}
+
+.mySpan { opacity: 100%; }
+
+#mapCover {
+	cursor: not-allowed;
+	width: 100px;
+	height: 50px;
+}
+
+#nullCover {
+	cursor: not-allowed;
+	width: 100px;
+	height: 50px;
+}
+
+#mapButton {
+	pointer-events: none;
+	transition: background-color ease 0.5s;
+}
+
+#relicsCover {
+	cursor: not-allowed;
+	width: 100px;
+	height: 50px;
+}
+#relicsButton {
+	pointer-events: none;
+	transition: background-color ease 0.5s;
+}
+
+.takeRelic {
+	user-select: none;
+	font-weight: bold;
+	border-style: solid;
+	border-color: #3B3C36;
+	border-width: 1px;
+	font-size: 12px;
+	text-align: center;
+	width: 80px;
+	height: 80px;
+	background: linear-gradient(69deg, rgba(255, 0, 0, 1) 0%,rgba(255, 154, 0, 1) 10%, rgba(208, 222, 33, 1) 20%, rgba(79, 220, 74, 1) 30%, rgba(63, 218, 216, 1) 40%, rgba(47, 201, 226, 1) 50%, rgba(28, 127, 238, 1) 60%, rgba(95, 21, 242, 1) 70%,  rgba(186, 12, 248, 1) 80%,  rgba(251, 7, 217, 1) 90%, rgba(255, 0, 0, 1) 100%);
+	color: black;
+	display: inline;
+	position: relative;
+	margin: auto;
+	line-height: 600%;
+	z-index: 4;
+}
+
+.rewardPopupText {
+	opacity: 100%;
+	transition-property: opacity, bottom; transition-duration: 2s 2s; 
+	position: absolute;
+	display: block;
+	font-size: 1px;
+	color: white;
+}
+
+.progressBar { /* All progress bars can use this class, HOWEVER background-color will still need to be specified. */
+	border-style: none;
+	height: 100%;
+	width: 100%;
+	display: inline-block;
+	position: relative;
+	justify-content: center;
+}
+
+.universalBar { /* The bar within which the progressBar "fills", in this case the "Universal" version, IE the top-of-screen stats etc. that do not change upon moving areas. */
+  border-style: solid;
+  border-color: black;
+  border-width: 3px 1px 3px 1px;
+  font-size: 12px;
+  width: 100px;
   height: 20px;
+  background-color: lightgrey;
+  text-align: left;
+  display: inline-block;
+  position: relative;
+}
+
+.loadingBar { /* The bar within which the progressBar "fills", in this case for Progress items. */
+  border-style: solid;
+  border-color: black;
+  border-width: 3px;
+  width: 80%;
+  height: 20%;
+  background-color: lightgrey;
+  text-align: left;
+  display: inline-block;
+  position: relative;
+  margin: auto;
+}
+
+.individualStatsContainer {
+	width: 200px;
+	height: 50px;
+	border-style: none;
+	position: static;
+	display: block;
+}
+
+.captionText {
+	font-size: 12px;
+	margin: auto;
+	text-align: center;
+}
+
+#locationVariable {
+	display: block;
+	position: static;
+	font-size: 40px;
+	text-align: center;
+	width: 80%;
+	margin: auto;
+	padding: 30px;
+}
+
+#menuButtons {
+	width: 100px;
+	height: 310px;
+}
+
+#statsContainer {
+	height: 250px;
+	width: 200px;
+	border-style: none;
+	position: static;
+	display: block;
+}
+
+.universalContainer {
+	display: block;
+	position: static;
+	border-width: 1px;
+	height: 50px;
+	width: 100px;
+}
+
+#hudMenu {
+	display: grid;
+	grid-template-columns: 100px 100px 200px 200px 400px;
+	grid-template-rows: auto auto auto auto;
+	border-style: solid;
+	border: 4px;
+	background-color: black;
+	width: 1000px;
+	height: 250px;
+}
+
+#mapPage { /* The unique map screen that will allow for movement between areas. */
+	height: 500px;
+	width: 1000px;
+	border-style: solid;
+	border-width: 1px;
+	grid-template-columns: 11.111% 11.111% 11.111% 11.111% 11.111% 11.111% 11.111% 11.111% 11.111%;
+	grid-template-rows: 20% 20% 20% 20% 20%;
+	user-select: none;
+	color: white;
+	border-color: pink;
+	display: none;
+	align-items: center;
+	position: sticky;
+	z-index: 1;
+	margin: auto;
+	text-align: center;
+	line-height: 80px;
+}
+
+.navTile {
+	height: 96px;
+	width: 128px;
+	position: sticky;
+	display: inline;
+	color: black;
+	border-color: black;
+	border-style: solid;
+	border-width: 1px;
+	z-index: 1;
+	background-color: rgb(163, 209, 163);
+}
+
+.mapTile {
+	height: 100px;
+	width: 111.11px;
+	position: sticky;
+	display: inline;
+	color: black;
+	background-color: white;
+	border-color: black;
+	border-style: solid;
+	border-width: 1px;
+	z-index: 1;
+	margin: auto;
+}
+
+#relicsPage {
+	height: 500px;
+	width: 996px;
+	grid-template-columns: 20% 20% 20% 20% 20%;
+	grid-template-rows: 20% 20% 20% 20% 20%;
+	border-style: solid;
+	border-width: 1px;
+	user-select: none;
+	background-color: blue;
+	color: black;
+	border-color: black;
+	display: none;
+	align-items: center;
+	position: sticky;
+}
+
+.relicsPageItem {
+	height: 96px;
+	width: 198px;
+	border-style: solid;
+	user-select: none;
+	background-color: gray;
+	color: black;
+	border-color: white;
+	display: block;
+	text-align: center;
+	justify-content: center;
+	position: relative;
+	font-size: 32px;
+	line-height: 85px;
+}
+
+#locationBox { /* The universal box that lists the area the player is currently in. */
+	position: static;
+	display: inline-block;
+	height: 150px;
+	width: 400px;
+	border: black;
+	border-style: solid;
+	border-width: 1px;
+	text-align: center;
+	font-size: 12px;
+	font-weight: bold;
+	color: white;
+	background-color: black;
+	align-items: center;
+	margin: auto;
+	line-height: 30px;
+}
+
+#objectsBox { /* The universal box that divides an area into progress/action items and progress/action NPCs. */
+	position: static;
+	display: grid;
+	height: 60px;
+	width: 1000px;
+	gap: 1px;
+	grid-template-columns: 50% 50%;
+	border: black;
+	border-style: solid;
+	border-width: 1px;
+	text-align: center;
+	font-size: 30px;
+	font-weight: bold;
+	background-color: #B4D3B2;
+	align-items: center;
+	overflow: hidden;
+}
+
+#ratbuxxText {
+	position: relative;
+	left: 10px;
+}
+#ratbuxxDisplay {
+	position: relative;
+	text-shadow: 0 0 3px #000000, 0 0 5px #000000;
+	top: 10px;
+	color: green;
+	font-size: 20px;
+	font-weight: bold;
+}
+
+.moneySymbol { /* A rather specific class for creating the FDR Mischief RatBuxx money symbol. */
+	position: relative;
+	display: inline-block;
+	font-size: 12px;
+	top: 10px;	
+	/*transform: scale(-1, -1);
+	-moz-transform: scale(-1, -1);
+    -webkit-transform: scale(-1, -1);
+    -o-transform: scale(-1, -1);
+    -ms-transform: scale(-1, -1);
+    transform: scale(-1, -1);*/
+}
+
+.actionText { /* Large text for the font description of actions items, as well as item names, e.g. "Couch" "Trash" at the start of each container. */
+	position: relative;
+	display: inline-block;
+	text-align: center;
+	color: black;
+	font-size: 15px;
+	margin: auto;
+}
+
+.area1Button {
+	background-color: orange;
+	font-size: 12px;
+}
+
+.progressText { /* Small text for the 0% Complete (etc.) text in progress items, as well as "(Actions)" and "(Progress)" at the start of each container. */
+	font-size: 15px;
+	text-align: center;
+	color: black;
+	display: block;
+	position: relative;
+	margin: auto;
+}
+
+/* Below are progress bars, retained for background-color. */
+
+#bodyExpProgressBar {
+  border-style: none;
+  height: 100%;
+  width: 100%;
+  font-size: 12px;
+  background-color: red;
+  text-align: left;
+  display: inline-block;
+  position: static;
+}
+#mindExpProgressBar {
+  border-style: none;
+  height: 100%;
+  width: 100%;
+  font-size: 12px;
+  background-color: blue;
+  text-align: left;
+  display: block;
+  position: static;
+}
+
+#couchSearchProgressBar { 
   background-color: green;
 }
-
-#loadingBar {
-  border-style: solid;
-  width: 50%;
-  height: 20px;
-  background-color: grey;
-  text-align: center;
-  line-height: 20px;
+#staminaProgressBar {
+  background-color: orange;
+}
+#floorTrashProgressBar {
+  background-color: brown;
 }
 
-#area1 {
-  display: block;
+#npcSpencer {
+	display: none;
+}
+
+#shopSpencer {
+	display: none;
 }
