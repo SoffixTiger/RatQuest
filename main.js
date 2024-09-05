@@ -157,11 +157,13 @@ class ActionMode
 		{
 			if (this.incapableDialogue !== undefined)
 				updateLog(dialogue[this.incapableDialogue]);
-			return false
+			return false;
 		}
+		if (currentActionModeId === this.id)
+			return true; // This mode is already started, there is nothign to do
 		else
 		{
-			currentActionModeId = this.id
+			setCurrentModeId(this.id)
 			if (this.startDialogue !== undefined)
 				updateLog(dialogue[this.startDialogue])
 			return true;
@@ -172,7 +174,7 @@ class ActionMode
 	{
 		if (currentActionModeId === this.id)
 		{
-			currentActionModeId = undefined;
+			setCurrentModeId(undefined);
 			if (this.stopDialogue !== undefined)
 				updateLog(dialogue[this.stopDialogue])
 		}
@@ -191,7 +193,7 @@ class ActionMode
 			{
 				if (this.interruptedDialogue !== undefined)
 					updateLog(dialogue[this.interruptedDialogue]);
-				currentActionModeId = undefined;
+				setCurrentModeId(undefined);
 			}
 			return false;
 		}
@@ -225,6 +227,7 @@ class ActionMode
 						let hideContainer = document.getElementById(this.hideContainerClass);
 							hideContainer.style.display = "none";
 					}
+					this.stopMode()
 				}
 				if (this.competionProgressElementId)
 				{
@@ -286,11 +289,51 @@ class ActionMode
 	}
 }
 
-function awardResourcesFromItem() {
+/**
+ * Given an item object, adds item.value worth of item.resource to the player's amount of that resource.
+ * @param {*} item The item whose resource-value should be added to the player's total.
+ */
+function awardResourcesFromItem(item) {
+	// TODO: Should probably error if given a nonexistent or malformed item.
+	if (!item || !item.resource || !item.value)
+			return;
+
+	switch(item.resource)
+	{
+		case "ratbuxx":
+			ratbuxx += item.value;
+			break;
+		case "paper":
+			paper += item.value;
+			break;
+		case "plastic":
+			plastic += item.value;
+			break;
+		case "metal":
+			metal += item.value;
+			break;
+		case "glass":
+			glass += item.value;
+			break;
+		default:
+			throw new Error("Trying to award unrecognized resource " + item.resource + " from item " + item)
+	}
 }
 
+/**
+ * For now, should be called anytime the current mode is to be changed.
+ * Performs cleanup work like changing all buttons back to orange before setting the new mode.
+ * @param {*} id 
+ */
 function setCurrentModeId(id) {
-	
+	if (id !== undefined && !modesById[id])
+		throw new error("Tried to change to nonexistent mode " + id)
+
+	// TODO: This should be handled by UI bindings but we didn't write those yet. 
+	area1ButtonFlags = document.querySelectorAll(".area1Button"); for (let i = 0; i < area1ButtonFlags.length; i++) { let button = area1ButtonFlags[i]; button.style.backgroundColor = "orange"; button.style.fontSize = "12px";}
+	area1ButtonFlags = document.querySelectorAll(".area2Button"); for (let i = 0; i < area1ButtonFlags.length; i++) { let button = area1ButtonFlags[i]; button.style.backgroundColor = "orange"; button.style.fontSize = "12px";}
+
+	currentActionModeId = id;
 }
 
 let dialogue = [];
@@ -319,13 +362,17 @@ dialogue[21]= "\n\u{1F400} You dust yourself off and get back to your feet. ";
 dialogue[22]= "\n\u{1F400} You flag down a disheveled-looking local and conduct reconnaissance  ";
 dialogue[23]= "\n\u{1F400} Wow, cool stuff! ";
 
+
+
+
+
 let modesById = {
 	// 										    id, 	staminaCost, rate, staminaRestore, 
 	//																 startDialogue, stopDialogue, incapableDialogue, interruptedDialogue, dropTable, statToIncrease, toastTargetId, completionProgressIncrement, onFinish, completionProgressElementId, hideContainerClassname, updateLogOnItemDrop
 	none:	 			 	new ActionMode("none",			      0,   0,  0.005, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined),
 	restingCouch:		 	new ActionMode("restingCouch",	      0,   0,   0.05,  2, 3, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined, undefined),
-	couchSearch: 		 	new ActionMode("couchSearch",	   0.01, 100,      0,  7, 9, 6, 8, couchItemTable, 			 "body", "couchSearchBar", 3.23, undefined, "couchSearchCompletionProgress", "couchSearchContainer", undefined),
-	floorTrash:		 		new ActionMode("floorTrash", 	   0.01, 200,      0, 14, 15, 6, 8, floorTrashItemTable, 	 "mind", "floorTrashBar", 3.23, undefined, "floorTrashCompletionProgress", "floorTrashContainer", undefined),
+	couchSearch: 		 	new ActionMode("couchSearch",	   0.01, 100,      0,  7, 9, 6, 8, couchItemTable, 			 "body", "couchSearchBar", 3.23, onCouchSearchFinished, "couchSearchCompletionProgress", "couchSearchContainer", true),
+	floorTrash:		 		new ActionMode("floorTrash", 	   0.01, 200,      0, 14, 15, 6, 8, floorTrashItemTable, 	 "mind", "floorTrashBar", 3.23, onFloorTrashFinished, "floorTrashCompletionProgress", "floorTrashContainer", undefined),
 	scavengeChange: 	    new ActionMode("scavengeChange",   0.02, 400,      0, 20, 21, 6, 8, scavengeChangeItemTable, "body", "scavengeChangeBar", 3.23, undefined, undefined, undefined, undefined),
 	talkLocals: 			new ActionMode("talkLocals", 	   0.02, 800,      0, 22, 23, 6, 8, undefined, 				 "mind", "talkLocalsBar", 19.99, undefined, "talkLocalsCompletionProgress", "talkLocalsContainer", undefined)
 } // Please add the rest
@@ -1272,9 +1319,7 @@ if ( initialize !== 1 ) {updateLog[0] && initialize == 1;}
   	staminaProgress = ((stamina / staminaCap)*100);
   	bodyExpProgress = ((bodyExp / bodyExpCap)*100);
   	mindExpProgress = ((mindExp / mindExpCap)*100);
-	//couchSearchProgress = ((couchSearchCounter / couchSearchRate)*100);
-	//floorTrashProgress = ((floorTrashCounter / floorTrashRate)*100);
-	//trashHeapProgress = ((trashHeapCounter / trashHeapRate)*100);
+	
 	if ( bodyExp >= bodyExpCap ) { // This manages Body level ups.
 		bodyLevel += 1;
 		staminaCap += 5;
@@ -1296,14 +1341,28 @@ if ( initialize !== 1 ) {updateLog[0] && initialize == 1;}
 	//if ( stamina < (staminaCap - (1/staminaRate)) ) { // This manages stamina regen.
 	//	stamina += (((staminaCap/staminaRate))*restingMultiplier);
 	//}
-	//if ( stamina >= 0 ) {
-	//	document.querySelector("div#couchSearchProgressBar").style.width= couchSearchProgress.toFixed(0).toString()+"%";
-	//	document.querySelector("div#floorTrashProgressBar").style.width= floorTrashProgress.toFixed(0).toString()+"%";
-	//	document.querySelector("div#trashHeapProgressBar").style.width= trashHeapProgress.toFixed(0).toString()+"%";
-	//	document.querySelector("div#talkLocalsProgressBar").style.width= talkLocalsProgress.toFixed(0).toString()+"%";
-	//}
-	//if ( couchSearchMode == 1 || floorTrashMode == 1 || trashHeapMode == 1 ) { staminaColorCounter += 1; }
-	//if ( staminaColorCounter >= staminaColorRate ) { selectRandomColor("staminaProgressBar"); staminaColorCounter = 0; }
+
+	// TODO:
+	// This is a job for mode UI bindings, but we haven't written those yet. Once there are mode UI bindings, this can be removed.
+	// We could be a little more efficient by only updating the progress bar belonging to the mode that is currently running,
+	//   but sometimes one skips making performance improvements to code that will be replaced in the near future.
+	if ( stamina >= 0 ) {
+
+		// It's poor practice to use hardcoded mode IDs like this too, but that's another of those things that 
+		// seems unnecessary to fix when the "real" fix will be made later.
+		couchSearchProgress = ((modesById["couchSearch"].counter / modesById["couchSearch"].rate)*100);
+		floorTrashProgress = ((modesById["floorTrash"].counter / modesById["floorTrash"].rate)*100);
+		talkLocalsProgress = ((modesById["talkLocals"].counter / modesById["talkLocals"].rate)*100);
+
+		document.querySelector("div#couchSearchProgressBar").style.width= couchSearchProgress.toFixed(0).toString()+"%";
+		document.querySelector("div#floorTrashProgressBar").style.width= floorTrashProgress.toFixed(0).toString()+"%";
+		//document.querySelector("div#trashHeapProgressBar").style.width= trashHeapProgress.toFixed(0).toString()+"%"; // No corresponding mode?
+		document.querySelector("div#talkLocalsProgressBar").style.width= talkLocalsProgress.toFixed(0).toString()+"%";
+	}
+
+	if ( modesById[currentActionModeId] && modesById[currentActionModeId].staminaCost > 0 ) { staminaColorCounter += 1; }
+	if ( staminaColorCounter >= staminaColorRate ) { selectRandomColor("staminaProgressBar"); staminaColorCounter = 0; }
+
 	//if ( areYouResting == 1 ) { staminaRestingColorCounter += 1 }
 	//if ( staminaRestingColorCounter >= staminaRestingColorRate ) { document.getElementById("staminaProgressBar").style.backgroundColor.hsl = (39, 150, 50); staminaRestingColorCounter = 0;}
 
@@ -1323,6 +1382,26 @@ if ( initialize !== 1 ) {updateLog[0] && initialize == 1;}
 	document.querySelector("div#bodyExpProgressBar").style.width= bodyExpProgress.toFixed(0).toString()+"%";
 	document.querySelector("div#mindExpProgressBar").style.width= mindExpProgress.toFixed(0).toString()+"%";
 }, 10);
+
+// What happens when floor trash mode is completed
+function onFloorTrashFinished()
+{
+	document.getElementById("floorTrashContainer").style.display = "none"; 
+	floorTrashCompletionProgress = 0;
+	floorTrashMode = 0;
+	document.getElementById("tshirtRelicContainer").style.display = "grid";
+	updateLog(dialogue[16]);
+}
+
+// What happens when couch search mode is completed
+function onCouchSearchFinished()
+{
+	document.getElementById("searchCouchContainer").style.display = "none"; 
+	couchSearchCompletionProgress = 0;
+	couchSearchMode = 0;
+	ratbuxx += 20.00;
+	updateLog(dialogue[5]);
+}
 
 // Miscellaneous:
 // vvvvv Currently unused function that scrolls down to the bottom after a message if the user is already at the bottom, and otherwise does not.
