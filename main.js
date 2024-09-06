@@ -329,9 +329,11 @@ function setCurrentModeId(id) {
 	if (id !== undefined && !modesById[id])
 		throw new error("Tried to change to nonexistent mode " + id)
 
-	// TODO: This should be handled by UI bindings but we didn't write those yet. 
+	// TODO: This should be handled by UI bindings but we didn't write those yet.
+
 	area1ButtonFlags = document.querySelectorAll(".area1Button"); for (let i = 0; i < area1ButtonFlags.length; i++) { let button = area1ButtonFlags[i]; button.style.backgroundColor = "orange"; button.style.fontSize = "12px";}
 	area1ButtonFlags = document.querySelectorAll(".area2Button"); for (let i = 0; i < area1ButtonFlags.length; i++) { let button = area1ButtonFlags[i]; button.style.backgroundColor = "orange"; button.style.fontSize = "12px";}
+	document.getElementById("staminaProgressBar").style.removeProperty("background-color");
 
 	currentActionModeId = id;
 }
