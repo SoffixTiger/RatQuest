@@ -229,7 +229,7 @@ class ActionMode
 					}
 					this.stopMode()
 				}
-				if (this.competionProgressElementId)
+				if (this.completionProgressElementId)
 				{
 					let progressString = this.completionProgress.toFixed(0).toString()+"% Complete";
 					document.getElementById(this.completionProgressElementId).innerHTML = progressString;
@@ -380,7 +380,14 @@ let modesById = {
 function couchSearchClick() {
 	cancelActions();
 	let modeToStart = modesById["couchSearch"];
-    modeToStart.startMode();
+	
+	if (currentActionModeId === modeToStart.id)
+	{
+		modeToStart.stopMode();
+		return;
+	}
+    
+	modeToStart.startMode();
 //	couchSearchMode = 1;
 	document.getElementById("couchSearchButton").style.backgroundColor = "red";
 	document.getElementById("couchSearchButton").style.fontWeight = "900";
@@ -389,6 +396,13 @@ function couchSearchClick() {
 function restingCouchClick() {
 	cancelActions();
 	let modeToStart = modesById["restingCouch"];
+
+	if (currentActionModeId === modeToStart.id)
+	{
+		modeToStart.stopMode();
+		return;
+	}
+
 	modeToStart.startMode();
 	document.getElementById("restButton").style.backgroundColor = "red";
 	document.getElementById("restButton").style.fontSize = "12px";
@@ -398,6 +412,13 @@ function restingCouchClick() {
 function floorTrashClick() {
 	cancelActions();
 	let modeToStart = modesById["floorTrash"];
+	
+	if (currentActionModeId === modeToStart.id)
+	{
+		modeToStart.stopMode();
+		return;
+	}
+
 	modeToStart.startMode();
 //	floorTrashMode = 1;
 	document.getElementById("floorTrashButton").style.backgroundColor = "red";
